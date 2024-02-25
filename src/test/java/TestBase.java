@@ -1,18 +1,28 @@
+import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.WebDriverRunner;
+import io.qameta.allure.Allure;
+import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Listeners;
+import vadim.ScreenshotListener;
 import vadim.enums.Browser;
 import vadim.enums.OperatingSystem;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
 import static com.codeborne.selenide.Selenide.open;
 
+@Listeners(ScreenshotListener.class)
 public class TestBase {
 
     @BeforeMethod
@@ -39,7 +49,15 @@ public class TestBase {
     }
 
     @AfterMethod
-    public void teardown() {
+    public void teardown(ITestResult result) {
+//        if (result.getStatus() == ITestResult.FAILURE) {
+//            File screenshot = Selenide.screenshot(OutputType.FILE);
+//            try {
+//                Allure.addAttachment(result.getTestName() + " screenshot", new FileInputStream(screenshot));
+//            } catch (FileNotFoundException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
         WebDriverRunner.getWebDriver().quit();
     }
 }
